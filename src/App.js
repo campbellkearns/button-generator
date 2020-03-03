@@ -1,26 +1,49 @@
-import React from 'react';
+import React, { Component } from 'react';
+
 import logo from './logo.svg';
 import './App.css';
+import AddButton from './AddButton';
+import IncrementForm from './IncrementForm';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      counterValue: 0,
+      numbers: []
+    }
+  }
+
+  createButton = (number) => {
+    this.setState({ numbers: [...this.state.numbers, number] })
+  }
+
+  incrementCounter = (increment) => {
+    this.setState({
+      counterValue: this.state.counterValue + increment
+    })
+  }
+
+  get buttons() {
+    return this.state.numbers.map((number, i) => <AddButton key={i} handleClick={this.incrementCounter} number={number}/>)
+  } 
+  
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const increment = Number(event.target.increment.value);
+    const newValue = this.state.counterValue + increment;
+    this.setState({ counterValue: newValue });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div>{this.state.counterValue}</div>
+        <IncrementForm handleSubmit={this.createButton} />
+        {this.buttons}
+      </div>
+    );
+  }
 }
 
 export default App;
